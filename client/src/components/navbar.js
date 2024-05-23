@@ -3,9 +3,12 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import Popover from '@mui/material/Popover';
+import Badge from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 
 import "./navbar.css";
+import { orange } from "@mui/material/colors";
 
 const NavBar = () => {
     const [product, setProduct] = useState("");
@@ -36,6 +39,16 @@ const NavBar = () => {
 
         )
     }, []);
+
+    const StyledBadge = styled(Badge)(({ theme }) => ({
+        '& .MuiBadge-badge': {
+            right: +12,
+            top: 9,
+            padding: '0 4px',
+            backgroundColor: '#B31B1B',
+            fontWeight: '600'
+        },
+    }));
 
     return (<>
         <div className="navbar-container">
@@ -75,7 +88,9 @@ const NavBar = () => {
                     )}
                 </PopupState>}
 
-                <ShoppingBagOutlinedIcon fontSize="large" className="navbar-account-btn" />
+                <StyledBadge badgeContent={20} color="primary" >
+                    <ShoppingBagOutlinedIcon fontSize="large" className="navbar-account-btn" />
+                </StyledBadge>
 
                 {
                     userLoggedIn ?
