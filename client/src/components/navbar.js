@@ -6,14 +6,17 @@ import Popover from '@mui/material/Popover';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import { Link } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 import "./navbar.css";
-import { orange } from "@mui/material/colors";
 
 const NavBar = () => {
     const [product, setProduct] = useState("");
-    const [userLoggedIn, setUserLoggedIn] = useState(true);
+    const [userLoggedIn, setUserLoggedIn] = useState(false);
     const [windowWidth, setWindowWidth] = useState(1000);
+    const [userAccountLoginBadgeVisible, setUserAccountLoginBadgeVisible] = useState(false);
+    const location = useLocation();
 
     function updateSearchBoxText(props) {
         setProduct(props.target.value);
@@ -32,28 +35,48 @@ const NavBar = () => {
             setWindowWidth(value.target.outerWidth);
         });
 
+        if(location.pathname === '/login' ||  userLoggedIn) {
+            setUserAccountLoginBadgeVisible(true);
+        } else {
+            setUserAccountLoginBadgeVisible(false);
+        }
+        
         return (
             window.removeEventListener("resize", (value) => {
                 setWindowWidth(value.target.outerWidth);
             })
 
         )
-    }, []);
+    }, [location]);
 
-    const StyledBadge = styled(Badge)(({ theme }) => ({
+    const ShoppingBagBadge = styled(Badge)(({ theme }) => ({
         '& .MuiBadge-badge': {
             right: +12,
             top: 9,
             padding: '0 4px',
-            backgroundColor: '#B31B1B',
+            backgroundColor: '#cc0000',
             fontWeight: '600'
+        },
+    }));
+
+    const UserAccountLoginBadge = styled(Badge)(({ theme }) => ({
+        '& .MuiBadge-badge': {
+            right: +15,
+            top: 9,
+            backgroundColor: '#cc0000',
+            fontWeight: '100',
+            height: '13px',
+            width: '13px',
+            borderRadius: '50%'
         },
     }));
 
     return (<>
         <div className="navbar-container">
             <div className='navbar-logo'>
-                <img className='navbar-logo-image' src='images/icons/main-ico.png' width={"100%"} />
+                <Link to={"/"}>
+                    <img className='navbar-logo-image' src='images/icons/main-ico.png' width={"100%"} />
+                </Link>
             </div>
             <div className='navbar-search-area'>
                 <input type="text" className="navbar-search-input" value={product} onChange={(props) => { updateSearchBoxText(props) }} placeholder="Search product here..." />
@@ -88,14 +111,39 @@ const NavBar = () => {
                     )}
                 </PopupState>}
 
-                <StyledBadge badgeContent={20} color="primary" >
+                <ShoppingBagBadge badgeContent={20} color="primary" >
                     <ShoppingBagOutlinedIcon fontSize="large" className="navbar-account-btn" />
-                </StyledBadge>
+                </ShoppingBagBadge>
 
                 {
                     userLoggedIn ?
-                        <img src="./images/my-test-image.jpeg" className="navbar-user-original-account" onClick={() => { setUserLoggedIn(!userLoggedIn) }} /> :
-                        <AccountCircleOutlinedIcon fontSize="large" className="navbar-account-btn" onClick={() => { setUserLoggedIn(!userLoggedIn) }} />
+                        <img src="./images/my-test-image.jpeg" className="navbar-user-original-account" /> :
+                        <PopupState variant="popover" popupId="demo-popup-popover">
+                            {(popupState) => (
+                                <div>
+                                    <div variant="contained" {...bindTrigger(popupState)}>
+                                        <UserAccountLoginBadge variant="dot" invisible={userAccountLoginBadgeVisible} color="primary">
+                                            <AccountCircleOutlinedIcon fontSize="large" className="navbar-account-btn" />
+                                        </UserAccountLoginBadge>
+                                    </div>
+                                    <Popover
+                                        {...bindPopover(popupState)}
+                                        anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'center',
+                                        }}
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'center',
+                                        }}
+                                    >
+                                        <div className="login-area">
+                                            <p className="login-area-text">Please Login <span><Link to={"/login"} className="link-btn login-area-btn">Login here</Link></span></p>
+                                        </div>
+                                    </Popover>
+                                </div>
+                            )}
+                        </PopupState>
                 }
             </div>
         </div>

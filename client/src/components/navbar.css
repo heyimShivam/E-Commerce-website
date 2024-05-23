@@ -7,6 +7,9 @@
     align-items: center;
     border-bottom: 2px solid royalblue;
     box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+    background-color: white;
+    position: sticky;
+    top:0;
 }
 
 .navbar-logo {
@@ -122,4 +125,28 @@
     .navbar-search-area {
         display: none;
     }
+}
+
+.login-area {
+    padding: 15px;
+    width: fit-content;
+}
+
+.login-area-text {
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.login-area-btn {
+    margin-left: 5px;
+    background-color: royalblue;
+    color: white;
+    font-weight: 700;
+    padding: 7px 15px;
+    border: 0px;
+    border-radius: 3px;
+}
+
+.login-area-btn:hover {
+    opacity: 90%;
 }
