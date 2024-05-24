@@ -8,29 +8,51 @@ import { useState } from "react";
 
 const Login = () => {
     const [visibilityIconToggle, setVisibilityIconToggle] = useState(true);
+    const [cred, setCred] = useState({
+        email: "",
+        password: ""
+    });
+
+    function updateCred(event) {
+        const {name, value} = event.target;
+
+        setCred((prev) => {
+            return {
+                ...prev,
+                [name]: value
+            }
+        });
+    }
+
+
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        console.log(cred)
+    }
 
     return (<section id="login">
         <div className='login-form'>
             <div className="login-form-image-block">
                 <AccountCircleOutlinedIcon className='login-form-image' />
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className='login-form-block'>
                     <label for="email" className='login-form-label'>Email:</label>
-                    <input id="email" className='login-form-input-box' type="email" placeholder="Enter your email here..." />
+                    <input id="email" className='login-form-input-box' value={cred.email} type="email" placeholder="Enter your email here..." name="email" onChange={updateCred} />
                 </div>
                 <div className='login-form-block'>
                     <label for="password" className='login-form-label'>Password:</label>
                     <div className="login-password-block">
-                        <input id="password" className='login-form-input-box login-form-input-box-pass' type={visibilityIconToggle ? "password" : "text"} placeholder="Enter your password here..." />
+                        <input id="password" minLength={6} className='login-form-input-box login-form-input-box-pass' value={cred.password} type={visibilityIconToggle ? "password" : "text"} placeholder="Enter your password here..."  name="password" onChange={updateCred}/>
                         <div className='login-form-input-visibility-icon'>{visibilityIconToggle ? <VisibilityIcon onClick={() => { setVisibilityIconToggle(!visibilityIconToggle) }} /> : <VisibilityOffIcon onClick={() => { setVisibilityIconToggle(!visibilityIconToggle) }} />}</div>
                     </div>
                 </div>
                 <div className='login-form-btn-block'>
-                    <button className='login-form-block login-form-btn'>
-                        Login
-                    </button>
-                </div>
+                <button type="submit" className='login-form-block login-form-btn'>
+                    Login
+                </button>
+            </div>
             </form>
             <p className="login-form-block login-form-extra-info">Don't have account? <span><Link to={"/sign-up"} className="link-btn signup-btn-login-page">Sign Up</Link> </span></p>
         </div>

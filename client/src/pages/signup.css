@@ -1,5 +1,5 @@
 #signup {
-    margin-top: 40px;
+    margin: 40px 0px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -10,27 +10,21 @@
 .signup-form {
     border: 1px solid white;
     border-radius: 15px;
-    width: fit-content;
+    width: 420px;
     padding: 55px 60px;
     box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
     background-color: white;
 }
 
-.signup-form-image-block {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+.signup-form-image {
     transform: scale(4.2);
-    color: royalblue;
-    margin: 10px 0px 60px 0px;
 }
 
 .signup-form-block {
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
-    width: 280px;
+    width: 100%;
 }
 
 .signup-form-label {
@@ -80,4 +74,57 @@
     margin-left: 5px;
     color: royalblue;
     font-weight: 700;
+}
+
+.signup-form-image-block {
+    position: relative;
+    width: 100%;
+    color: royalblue;
+    height: 84px;
+    margin: 10px 0px 30px 0px;
+}
+
+.signup-form-image-place {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.image-upload-text {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -3%);
+    width: fit-content;
+    z-index: 15;
+    height: 50%;
+    width: 84px;
+    border-radius: 0 0 150px 150px;
+    overflow: hidden;
+}
+
+.image-upload-label {
+    background-color: #3333339d;
+    font-weight: 700;
+    font-size: 12px;
+    overflow: hidden;
+    width: 100%;
+    height: 120%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding-bottom: 16px;
+    cursor:pointer;
+}
+
+.signup-uploaded-image {
+    position: absolute;
+    top:0;
+    left: 50%;
+    transform: translate(-50%, -2%);
+    border-radius: 100%;
+    width: 85px;
+    height: 100%;
 }

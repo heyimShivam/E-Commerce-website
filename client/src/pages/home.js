@@ -1,6 +1,6 @@
 const Home = () => {
     return (<>
-    Home Component
+        Home Component
     </>)
 };
 

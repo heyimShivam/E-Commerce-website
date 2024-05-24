@@ -1,46 +1,95 @@
-import {useState} from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import ImageTOBase64 from "../helpers/imageToBase64";
 
 import "./signup.css";
 
 const Signup = () => {
     const [visibilityIconToggle, setVisibilityIconToggle] = useState(true);
+    const [cred, setCred] = useState({
+        username: "",
+        email: "",
+        password: "",
+        rePassword: "",
+        image: ""
+    });
+
+    function updateCred(event) {
+        const { name, value } = event.target;
+
+        setCred((prev) => {
+            return {
+                ...prev,
+                [name]: value
+            }
+        });
+    }
+
+    async function updateImage(event) {
+        const file = event.target.files[0];
+
+        const image = await ImageTOBase64(file);
+
+        console.log("file", image);
+
+        setCred((prev) => {
+            return {
+                ...prev,
+                image: image
+            }
+        });
+
+        console.log(cred);
+    }
+
+    function handleSignUp(event) {
+        event.preventDefault();
+
+        console.log(cred);
+    }
 
     return (<section id="signup">
         <div className='signup-form'>
-            <div className="signup-form-image-block">
-                <AccountCircleOutlinedIcon className='signup-form-image' />
-            </div>
-            <form>
-            <div className='signup-form-block'>
+            <form onSubmit={handleSignUp}>
+                <div className="signup-form-image-block">
+                    {!cred.image ? <div class="signup-form-image-place">
+                        <AccountCircleOutlinedIcon className='signup-form-image' />
+                    </div>:
+                    <img src={cred.image} className="signup-uploaded-image"/>}
+                    <div className="image-upload-text">
+                        <label className="image-upload-label" for="image-upload">Upload Here</label>
+                        <input id="image-upload" hidden type="file" accept="image/png, image/gif, image/jpeg , image/jpg" name="image" onChange={(value) => updateImage(value)} />
+                    </div>
+                </div>
+
+                <div className='signup-form-block'>
                     <label for="username" className='signup-form-label'>User Name:</label>
-                    <input id="username" className='signup-form-input-box' type="text" placeholder="Enter your email here..." />
+                    <input required id="username" className='signup-form-input-box' type="text" placeholder="Enter your email here..." value={cred.username} name="username" onChange={(value) => updateCred(value)} />
                 </div>
                 <div className='signup-form-block'>
                     <label for="email" className='signup-form-label'>Email:</label>
-                    <input id="email" className='signup-form-input-box' type="email" placeholder="Enter your email here..." />
+                    <input required id="email" className='signup-form-input-box' type="email" placeholder="Enter your email here..." value={cred.email} name="email" onChange={(value) => updateCred(value)} />
                 </div>
                 <div className='login-form-block'>
-                    <label for="password"  className='login-form-label'>Password:</label>
+                    <label for="password" className='login-form-label'>Password:</label>
                     <div className="login-password-block">
-                        <input id="password" className='login-form-input-box login-form-input-box-pass' type={visibilityIconToggle ? "password" : "text"} placeholder="Enter your password here..." />
+                        <input required id="password" className='login-form-input-box login-form-input-box-pass' minLength={8} type={visibilityIconToggle ? "password" : "text"} placeholder="Enter your password here..." value={cred.password} name="password" onChange={(value) => updateCred(value)} />
                         <div className='login-form-input-visibility-icon'>{visibilityIconToggle ? <VisibilityIcon onClick={() => { setVisibilityIconToggle(!visibilityIconToggle) }} /> : <VisibilityOffIcon onClick={() => { setVisibilityIconToggle(!visibilityIconToggle) }} />}</div>
                     </div>
                 </div>
                 <div className='signup-form-block'>
-                    <label for="re-password" className='signup-form-label'>Re-Enter Password:</label>
-                    <input id="re-password" className='signup-form-input-box' type="password" placeholder="Enter your password here..." />
-                </div>
-                <div className='signup-form-block'>
-                    <label for="image-upload" className='signup-form-label'>Upload Photo:</label>
-                    <input  id="image-upload" type="file" accept="image/png, image/gif, image/jpeg , image/jpg"/>
+                    <label for="re-password" className='signup-form-label'>Confirm Password:</label>
+                    <div className="login-password-block">
+                        <input required id="re-password" className='login-form-input-box login-form-input-box-pass' minLength={8} type={visibilityIconToggle ? "password" : "text"} placeholder="Enter your password here..." value={cred.rePassword} name="rePassword" onChange={(value) => updateCred(value)} />
+                        <div className='login-form-input-visibility-icon'>{visibilityIconToggle ? <VisibilityIcon onClick={() => { setVisibilityIconToggle(!visibilityIconToggle) }} /> : <VisibilityOffIcon onClick={() => { setVisibilityIconToggle(!visibilityIconToggle) }} />}</div>
+                    </div>
                 </div>
                 <div className='signup-form-btn-block'>
-                    <button className='signup-form-block signup-form-btn'>
-                        signup
+                    <button type="submit" className='signup-form-block signup-form-btn'>
+                        Sign up
                     </button>
                 </div>
             </form>

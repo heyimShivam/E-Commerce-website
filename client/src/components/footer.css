@@ -1,0 +1,11 @@
+.footer-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+    padding: 15px;
+    background-color: royalblue;
+    color: white;
+    font-weight: 500;
+}
