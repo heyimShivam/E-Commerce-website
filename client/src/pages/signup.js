@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ImageTOBase64 from "../helpers/imageToBase64";
+import { toast } from 'react-toastify';
+import { SignupBackendAPI } from "./loginAndSignupBackendAPI";
 
 import "./signup.css";
 
 const Signup = () => {
     const [visibilityIconToggle, setVisibilityIconToggle] = useState(true);
+    const navigate = useNavigate();
     const [cred, setCred] = useState({
         username: "",
         email: "",
@@ -16,6 +19,36 @@ const Signup = () => {
         rePassword: "",
         image: ""
     });
+
+    function handleSignUp(event) {
+        event.preventDefault();
+
+        if (!(cred.password === cred.rePassword)) return;
+
+        const userLoginCred = {
+            username: cred.username,
+            email: cred.email,
+            password: cred.password,
+            image: cred.image,
+        };
+
+        SignupBackendAPI(userLoginCred).then(
+            res => res.json()
+        ).then(
+            res => {
+                if(res.success) {
+                    toast.success(res.message);
+                    navigate("/login");
+                }
+
+                if(res.error) {
+                    toast.error(res.message);
+                }
+            }
+        ).catch((err) => {
+            console.log(err)
+        })
+    }
 
     function updateCred(event) {
         const { name, value } = event.target;
@@ -45,20 +78,14 @@ const Signup = () => {
         console.log(cred);
     }
 
-    function handleSignUp(event) {
-        event.preventDefault();
-
-        console.log(cred);
-    }
-
     return (<section id="signup">
         <div className='signup-form'>
             <form onSubmit={handleSignUp}>
                 <div className="signup-form-image-block">
                     {!cred.image ? <div class="signup-form-image-place">
                         <AccountCircleOutlinedIcon className='signup-form-image' />
-                    </div>:
-                    <img src={cred.image} className="signup-uploaded-image"/>}
+                    </div> :
+                        <img src={cred.image} className="signup-uploaded-image" />}
                     <div className="image-upload-text">
                         <label className="image-upload-label" for="image-upload">Upload Here</label>
                         <input id="image-upload" hidden type="file" accept="image/png, image/gif, image/jpeg , image/jpg" name="image" onChange={(value) => updateImage(value)} />
