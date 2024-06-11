@@ -4,12 +4,15 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { toast } from 'react-toastify';
+import { useContext } from "react";
+import FetchUserDetails from "../context";
 
 import { LoginBackendAPI } from "./loginAndSignupBackendAPI";
 
 import "./login.css";
 
 const Login = () => {
+    const fetchUserDetailsContext = useContext(FetchUserDetails);
     const [visibilityIconToggle, setVisibilityIconToggle] = useState(true);
     const [cred, setCred] = useState({
         email: "",
@@ -38,18 +41,20 @@ const Login = () => {
             res => res.json()
         ).then(
             (res) => {
-                if(res.success) {
+                if (res.success) {
                     toast.success(res.message);
+                    fetchUserDetailsContext?.fetchUserDetails();
                     navigate("/");
                 }
 
-                if(res.error) {
+                if (res.error) {
                     toast.error(res.message);
                 }
             }
         ).catch(
             err => console.log(err)
         );
+
     }
 
     return (<section id="login">

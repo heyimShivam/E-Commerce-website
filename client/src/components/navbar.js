@@ -6,17 +6,47 @@ import Popover from '@mui/material/Popover';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { SummaryApi } from "../common/index";
+import { setUserDetails } from "../store/userDetailsSlice";
+import { toast } from 'react-toastify';
 
 import "./navbar.css";
 
 const NavBar = () => {
+    const userDetails = useSelector(state => state?.user?.user);
     const [product, setProduct] = useState("");
     const [userLoggedIn, setUserLoggedIn] = useState(false);
     const [windowWidth, setWindowWidth] = useState(1000);
     const [userAccountLoginBadgeVisible, setUserAccountLoginBadgeVisible] = useState(false);
     const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    async function handleLogout() {
+        await fetch(SummaryApi.logout.url, {
+            method: SummaryApi.logout.method,
+            credentials: 'include',
+            headers: {
+                "content-type": "application/json"
+            }
+        }).then(res => res.json()).then(
+            res => {
+                console.log(res);
+                dispatch(setUserDetails({}));
+                navigate("/");
+                if (res.success) {
+                    toast.success(res.message);
+                } else {
+                    toast.error(res.message);
+                }
+            }
+        ).catch(err => {
+            console.log(err);
+        })
+    }
 
     function updateSearchBoxText(props) {
         setProduct(props.target.value);
@@ -35,12 +65,12 @@ const NavBar = () => {
             setWindowWidth(value.target.outerWidth);
         });
 
-        if(location.pathname === '/login' ||  userLoggedIn) {
+        if (location.pathname === '/login' || userLoggedIn) {
             setUserAccountLoginBadgeVisible(true);
         } else {
             setUserAccountLoginBadgeVisible(false);
         }
-        
+
         return (
             window.removeEventListener("resize", (value) => {
                 setWindowWidth(value.target.outerWidth);
@@ -116,34 +146,62 @@ const NavBar = () => {
                 </ShoppingBagBadge>
 
                 {
-                    userLoggedIn ?
-                        <img src="./images/my-test-image.jpeg" className="navbar-user-original-account" /> :
-                        <PopupState variant="popover" popupId="demo-popup-popover">
-                            {(popupState) => (
-                                <div>
-                                    <div variant="contained" {...bindTrigger(popupState)}>
-                                        <UserAccountLoginBadge variant="dot" invisible={userAccountLoginBadgeVisible} color="primary">
-                                            <AccountCircleOutlinedIcon fontSize="large" className="navbar-account-btn" />
-                                        </UserAccountLoginBadge>
+                    userDetails?.image &&
+                    <PopupState variant="popover" popupId="demo-popup-popover">
+                        {(imagePopupState) => (
+                            <>
+                                <img variant="contained"
+                                    src="./images/my-test-image.jpeg"
+                                    className="navbar-user-original-account"
+                                    {...bindTrigger(imagePopupState)} />
+                                <Popover {...bindPopover(imagePopupState)}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'center',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'center',
+                                    }}
+                                >
+                                    <div className="user-logged-options">
+                                        <p className="user-logged-option user-logged-option-username">Hi <span className="username">{userDetails.username}</span></p>
+                                        <p className="user-logged-option">Click here</p>
+                                        <p className="user-logged-option user-logged-last-option">Click here</p>
+                                        <p className="user-logged-option logout-btn" onClick={handleLogout}>Logout</p>
                                     </div>
-                                    <Popover
-                                        {...bindPopover(popupState)}
-                                        anchorOrigin={{
-                                            vertical: 'bottom',
-                                            horizontal: 'center',
-                                        }}
-                                        transformOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'center',
-                                        }}
-                                    >
-                                        <div className="login-area">
-                                            <p className="login-area-text">Please Login <span><Link to={"/login"} className="link-btn login-area-btn">Login here</Link></span></p>
-                                        </div>
-                                    </Popover>
+                                </Popover>
+                            </>
+                        )}
+                    </PopupState>
+                }
+                {
+                    !(userDetails?.image) && <PopupState variant="popover" popupId="demo-popup-popover">
+                        {(LoginPopupState) => (
+                            <div>
+                                <div variant="contained" {...bindTrigger(LoginPopupState)}>
+                                    <UserAccountLoginBadge variant="dot" invisible={userAccountLoginBadgeVisible} color="primary">
+                                        <AccountCircleOutlinedIcon fontSize="large" className="navbar-account-btn" />
+                                    </UserAccountLoginBadge>
                                 </div>
-                            )}
-                        </PopupState>
+                                <Popover
+                                    {...bindPopover(LoginPopupState)}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'center',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'center',
+                                    }}
+                                >
+                                    <div className="login-area">
+                                        <p className="login-area-text">Please Login <span><Link to={"/login"} className="link-btn login-area-btn">Login here</Link></span></p>
+                                    </div>
+                                </Popover>
+                            </div>
+                        )}
+                    </PopupState>
                 }
             </div>
         </div>

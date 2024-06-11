@@ -1,5 +1,5 @@
-import { createContext } from "react";
+import { createContext } from 'react';
 
-const Context = createContext(null);
+const FetchUserDetails = createContext(null);
 
-export default Context;
+export default FetchUserDetails;

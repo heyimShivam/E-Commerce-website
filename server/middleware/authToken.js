@@ -11,17 +11,16 @@ const authToken = async (req, res, next) => {
                 success: false
             })
         }
+
         jwt.verify(jwtToken, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
             if(err) {
                 console.log("Error auth: ", err)
             }
 
-            req.user.id = decoded?._id;
-            req.user.email = decoded?.email;
+            req.id = decoded?._id;
+            req.email = decoded?.email;
             next();
         })
-        console.log("jwtToken", jwtToken);
-
     } catch(err) {
         console.log("Error: ", err);
         

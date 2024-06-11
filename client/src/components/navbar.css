@@ -155,3 +155,50 @@
 .login-area-btn:hover {
     opacity: 90%;
 }
+
+.user-logged-options {
+    padding: 12px;
+}
+
+.user-logged-option {
+    padding: 8px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.236);
+    text-align: center;
+    color: #333;
+    font-weight: 500;
+}
+
+.user-logged-last-option {
+    border-bottom: 0px;
+}
+
+.user-logged-option:hover {
+    color: royalblue;
+}
+
+.logout-btn {
+    background-color: royalblue;
+    font-weight: 600;
+    border-radius: 4px;
+    color: white;
+}
+
+.logout-btn:hover {
+    color: white;
+    background-color: rgba(65, 105, 225, 0.85);
+}
+
+.user-logged-option-username {
+    cursor:default;
+    font-weight: 100;
+}
+.user-logged-option-username:hover{
+    color: #333;
+} 
+
+.username {
+    font-weight: 600;
+    color: royalblue;
+    font-style: italic;
+}
